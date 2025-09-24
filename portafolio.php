@@ -7,8 +7,15 @@ if ($_POST) {
     # print_r($_POST);
     $nombre= $_POST['nombre'];
     $descripcion= $_POST['descripcion'];
+    
+    $fecha= new DateTime(); // <- para que la imagen lleve el nombre del tiempo
     // para obtener el nombre de la imagen
-    $imagen= $_FILES['archivo']['name'];
+    $imagen= $fecha->getTimestamp()."_".$_FILES['archivo']['name'];
+    
+    // para adjuntar la imagen
+    $imagen_temporal= $_FILES['archivo']['tmp_name'];
+    move_uploaded_file($imagen_temporal, "imagenes/".$imagen);
+
     $objConexion = new conexion();
     $sql = "INSERT INTO `proyectos` (`id`, `nombre`, `imagen`, `descripcion`) VALUES (NULL, '$nombre', '$imagen', '$descripcion');";
     $objConexion->ejecutar($sql);
@@ -16,6 +23,9 @@ if ($_POST) {
 if ($_GET) {
     $id= $_GET['borrar'];
     $objConexion = new conexion();
+    $imagen= $objConexion->consultar("SELECT imagen FROM proyectos WHERE id= ".$id);
+    // print_r($imagen[0]['imagen']); <- acá es para obtener el nombre del archivo
+    unlink("imagenes/".$imagen[0]['imagen']);
     $sql= "DELETE FROM `proyectos` WHERE `proyectos`.`id` = ".$id;
     $objConexion->ejecutar($sql);
 }
@@ -65,7 +75,9 @@ $proyectos= $objConexion->consultar("SELECT * FROM proyectos");
                         <tr>
                             <td> <?php echo $proyecto['id']; ?> </td>
                             <td> <?php echo $proyecto['nombre']; ?> </td>
-                            <td> <?php echo $proyecto['imagen']; ?> </td>
+                            <td>
+                                <img width="100" src="imagenes/<?php echo $proyecto['imagen']; ?>" alt="">
+                            </td>
                             <td> <?php echo $proyecto['descripcion']; ?> </td>
                             <td> <a href="?borrar=<?php echo $proyecto['id']; ?>" class="btn btn-danger">Eliminar</a></td>
                         </tr>
