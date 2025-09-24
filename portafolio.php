@@ -6,8 +6,11 @@
 if ($_POST) {
     # print_r($_POST);
     $nombre= $_POST['nombre'];
+    $descripcion= $_POST['descripcion'];
+    // para obtener el nombre de la imagen
+    $imagen= $_FILES['archivo']['name'];
     $objConexion = new conexion();
-    $sql = "INSERT INTO `proyectos` (`id`, `nombre`, `imagen`, `descripcion`) VALUES (NULL, '$nombre', 'fernando.png', 'Prueba 1');";
+    $sql = "INSERT INTO `proyectos` (`id`, `nombre`, `imagen`, `descripcion`) VALUES (NULL, '$nombre', '$imagen', '$descripcion');";
     $objConexion->ejecutar($sql);
 }
 if ($_GET) {
@@ -37,6 +40,9 @@ $proyectos= $objConexion->consultar("SELECT * FROM proyectos");
                         <br>
                         Imagen del proyecto: <input class="form-control" type="file" name="archivo" id="">
                         <br>
+                        Descripción
+                        <textarea class="form-control" name="descripcion" rows="3" ></textarea>
+                        <br>
                         <input class="btn btn-success" type="submit" value="Enviar Proyecto">
                     </form>
 
@@ -51,6 +57,7 @@ $proyectos= $objConexion->consultar("SELECT * FROM proyectos");
                             <th scope="col">ID</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Imagen</th>
+                            <th scope="col">Descripción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,6 +66,7 @@ $proyectos= $objConexion->consultar("SELECT * FROM proyectos");
                             <td> <?php echo $proyecto['id']; ?> </td>
                             <td> <?php echo $proyecto['nombre']; ?> </td>
                             <td> <?php echo $proyecto['imagen']; ?> </td>
+                            <td> <?php echo $proyecto['descripcion']; ?> </td>
                             <td> <a href="?borrar=<?php echo $proyecto['id']; ?>" class="btn btn-danger">Eliminar</a></td>
                         </tr>
                         <?php } ?>

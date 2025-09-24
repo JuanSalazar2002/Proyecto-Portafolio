@@ -21,6 +21,8 @@ class conexion{
     }
 
     public function consultar($sql){
+        // como aqui se esperan resultados, estamos guardando cada informacion en
+        // la variable $sentencia
         $sentencia= $this->conexion->prepare($sql);
         $sentencia->execute();
         return $sentencia->fetchAll(); // fecthAll retorna todos los datos 
