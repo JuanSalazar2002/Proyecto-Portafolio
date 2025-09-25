@@ -19,6 +19,7 @@ if ($_POST) {
     $objConexion = new conexion();
     $sql = "INSERT INTO `proyectos` (`id`, `nombre`, `imagen`, `descripcion`) VALUES (NULL, '$nombre', '$imagen', '$descripcion');";
     $objConexion->ejecutar($sql);
+    header("location:portafolio.php");
 }
 if ($_GET) {
     $id= $_GET['borrar'];
@@ -28,6 +29,7 @@ if ($_GET) {
     unlink("imagenes/".$imagen[0]['imagen']);
     $sql= "DELETE FROM `proyectos` WHERE `proyectos`.`id` = ".$id;
     $objConexion->ejecutar($sql);
+    header("location:portafolio.php");
 }
 
 # Esto tiene que funcionar independiente del envio de datos
@@ -46,9 +48,9 @@ $proyectos= $objConexion->consultar("SELECT * FROM proyectos");
                 <div class="card-body">
 
                     <form action="portafolio.php" method="post" enctype="multipart/form-data">
-                        Nombre del proyecto: <input class="form-control" type="text" name="nombre" id="">
+                        Nombre del proyecto: <input required class="form-control" type="text" name="nombre" id="">
                         <br>
-                        Imagen del proyecto: <input class="form-control" type="file" name="archivo" id="">
+                        Imagen del proyecto: <input required class="form-control" type="file" name="archivo" id="">
                         <br>
                         Descripción
                         <textarea class="form-control" name="descripcion" rows="3" ></textarea>
